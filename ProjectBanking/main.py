@@ -6,7 +6,7 @@ import os
 
 connection = mysql.connector.connect(user = 'root', database = 'example', password ='Cocogoat3663!')
 
-def check(id):
+def check(id): #checks whether the ID submitted is found in the database
     cursor = connection.cursor()
     testQuery = ("SELECT * FROM Accounts WHERE ID = %s")
     cursor.execute(testQuery, (id,))
@@ -17,7 +17,7 @@ def check(id):
     else:
         return False
 
-def create(name, id):
+def create(name, id): #creates a new account with all parameters and a starting balance of 0
     passw = input("What password would you like?\n>")
     cursor = connection.cursor()
     try:
@@ -30,7 +30,7 @@ def create(name, id):
     cursor.close()
     os.system('cls||clear')
 
-def balance(id):
+def balance(id): #outputs balance of the account
     os.system('cls||clear')
     checker = check(id)
     if (not checker):
@@ -43,7 +43,7 @@ def balance(id):
     print(f"Balance: {balance}")
     cursor.close()
 
-def deposit(amount, id):
+def deposit(amount, id): #deposits money into account
     os.system('cls||clear')
     checker = check(id)
     if (not checker):
@@ -62,7 +62,7 @@ def deposit(amount, id):
     connection.commit()
     cursor.close()
 
-def withdraw(amount, id):
+def withdraw(amount, id): #withdraws money from account
     os.system('cls||clear')
     checker = check(id)
     if (not checker):
@@ -85,7 +85,7 @@ def withdraw(amount, id):
     cursor.close()
     return
 
-def close(id):
+def close(id): #closes accounts
     os.system('cls||clear')
     checker = check(id)
     if (not checker):
@@ -98,7 +98,7 @@ def close(id):
     connection.commit()
     cursor.close()
 
-def modify(id, name):
+def modify(id, name): #modifies names of accounts
     os.system('cls||clear')
     checker = check(id)
     if (not checker):
