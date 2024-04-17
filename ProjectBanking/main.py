@@ -1,8 +1,10 @@
 import mysql.connector
 import random
+import os
+
+
 
 connection = mysql.connector.connect(user = 'root', database = 'example', password ='Cocogoat3663!')
-
 
 def check(id):
     cursor = connection.cursor()
@@ -16,14 +18,20 @@ def check(id):
         return False
 
 def create(name, id):
+    passw = input("What password would you like?\n>")
     cursor = connection.cursor()
-    addData = ("INSERT INTO Accounts (Name, ID, Balance) VALUES (%s, %s, 0)")
-    cursor.execute(addData, (name, id))
-    print("Account created! We're glad to have you.")
-    connection.commit()
+    try:
+        addData = ("INSERT INTO Accounts (Name, ID, Password, Balance) VALUES (%s, %s, %s, 0)")
+        cursor.execute(addData, (name, id, passw))
+        print("Account created! We're glad to have you.")
+        connection.commit()
+    except:
+        pass
     cursor.close()
+    os.system('cls||clear')
 
 def balance(id):
+    os.system('cls||clear')
     checker = check(id)
     if (not checker):
         print("Sorry, invalid ID! Please enter a valid ID!1")
@@ -36,6 +44,7 @@ def balance(id):
     cursor.close()
 
 def deposit(amount, id):
+    os.system('cls||clear')
     checker = check(id)
     if (not checker):
         print("Sorry, invalid ID! Please enter a valid ID!2")
@@ -54,6 +63,7 @@ def deposit(amount, id):
     cursor.close()
 
 def withdraw(amount, id):
+    os.system('cls||clear')
     checker = check(id)
     if (not checker):
         print("Sorry, invalid ID! Please enter a valid ID!3")
@@ -76,6 +86,7 @@ def withdraw(amount, id):
     return
 
 def close(id):
+    os.system('cls||clear')
     checker = check(id)
     if (not checker):
         print("Sorry, invalid ID! Please enter a valid ID!4")
@@ -88,6 +99,7 @@ def close(id):
     cursor.close()
 
 def modify(id, name):
+    os.system('cls||clear')
     checker = check(id)
     if (not checker):
         print("Sorry, invalid ID! Please enter a valid ID!5")
@@ -98,6 +110,7 @@ def modify(id, name):
     connection.commit()
     cursor.close()
 
+
 print("Welcome!")
 while (True):
     print("""\nOptions:
@@ -107,7 +120,8 @@ while (True):
     4. Create a new account
     5. Close Account
     6. Change name under account
-    7. Exit""")
+    7: Recover ID
+    8. Exit""")
 
     choice = input(">")
     try:
@@ -115,13 +129,26 @@ while (True):
     except:
         print("Make sure your choice is an integer!")
         continue
-    if ((choice < 1 or choice > 7)):
+    if ((choice < 1 or choice > 8)):
         print("Invalid input! Make sure your choice is an integer between 1 and 7.\n")
         continue
 
-    if (choice == 7):
+    if (choice == 8):
         print("Have a nice day!")
         break
+    elif (choice == 7):
+        cursor = connection.cursor()
+        name = input("What's your name?\n>")
+        passw = input("What's your password?\n>")
+        testQuery = ("SELECT ID FROM Accounts WHERE Name=%s AND Password=%s")
+        cursor.execute(testQuery, (name, passw))
+        result = cursor.fetchone()[0]
+        cursor.close()
+        if result:
+            il = result
+            print(f"Your ID is {il}")
+        else:
+            print("No ID found with that username and password.")
     elif (choice == 4):
         cursor = connection.cursor()
         testQuery = ("SELECT ID FROM Accounts")
@@ -131,6 +158,12 @@ while (True):
         available_ids = list(set(rang) - set(IDs))
         id = int(random.sample(available_ids, 1)[0])
         name = input("What name should your new account be under?\n>")
+        testQuery = ("SELECT Name FROM Accounts")
+        cursor.execute(testQuery)
+        names = [row[0] for row in cursor.fetchall()]
+        if (name in names):
+            print("This name is taken! Choose a new name!")
+            continue
         create(name, id)
         cursor.close()
     else:
