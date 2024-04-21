@@ -4,7 +4,7 @@ import os
 
 
 
-connection = mysql.connector.connect(user = 'root', database = 'example', password ='Cocogoat3663!')
+connection = mysql.connector.connect(user = 'root', database = 'example', password ='removedforsecurity!')
 
 def check(id): #checks whether the ID submitted is found in the database
     cursor = connection.cursor()
